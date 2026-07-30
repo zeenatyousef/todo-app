@@ -1,0 +1,24 @@
+{
+  "name": "Todo App",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+  "forwardPorts": [3000, 5000, 5432],
+  "portsAttributes": {
+    "3000": {
+      "label": "Frontend",
+      "onAutoForward": "openPreview"
+    },
+    "5000": {
+      "label": "Backend API",
+      "visibility": "public",
+      "onAutoForward": "notify"
+    },
+    "5432": {
+      "label": "Postgres DB",
+      "onAutoForward": "silent"
+    }
+  },
+  "postStartCommand": "docker-compose up --build -d"
+}
