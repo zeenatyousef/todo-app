@@ -1,0 +1,608 @@
+/* ---------------------------------------------------------------
+   Design tokens — "Departures" board aesthetic.
+   A todo list read like a boarding pass: perforated ticket rows,
+   a split-flap style status board for the running totals.
+------------------------------------------------------------------ */
+:root {
+  --ink: #16233a;
+  --ink-soft: #2c3c58;
+  --paper: #eef1f6;
+  --surface: #ffffff;
+  --line: #d9dee7;
+  --muted: #6b7688;
+
+  --amber: #e69c2e;
+  --amber-deep: #b9791a;
+  --coral: #e14f3d;
+  --coral-soft: #fbe4e0;
+  --teal: #248a68;
+  --teal-soft: #dcf2ea;
+  --navy-soft: #e3e8f2;
+
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+
+  --radius: 10px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--paper);
+  color: var(--ink);
+  background-image: radial-gradient(circle at 1px 1px, rgba(22, 35, 58, 0.06) 1px, transparent 0);
+  background-size: 22px 22px;
+}
+
+button {
+  font-family: inherit;
+}
+
+/* ---------------- Shell / layout ---------------- */
+
+.app-shell {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 32px 20px 80px;
+}
+
+.auth-shell {
+  max-width: 380px;
+  margin: 10vh auto;
+  padding: 0 20px;
+}
+
+/* ---------------- Board header (signature element) ---------------- */
+
+.board {
+  background: var(--ink);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  color: #fff;
+  box-shadow: 0 12px 30px -14px rgba(22, 35, 58, 0.55);
+}
+
+.board-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.board-brand {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.board-brand h1 {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.board-brand .tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--amber);
+  border: 1px solid rgba(230, 156, 46, 0.5);
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.06em;
+}
+
+.board-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.logout-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #fff;
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 12px;
+  font-family: var(--font-mono);
+}
+
+.logout-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.board-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.flap {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 10px 8px;
+  text-align: center;
+}
+
+.flap .flap-value {
+  font-family: var(--font-mono);
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+.flap.overdue .flap-value {
+  color: var(--coral);
+}
+.flap.pending .flap-value {
+  color: var(--amber);
+}
+.flap.done .flap-value {
+  color: var(--teal);
+}
+
+.flap .flap-label {
+  margin-top: 6px;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.progress-track {
+  margin-top: 14px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--teal), #57c79a);
+  transition: width 0.4s ease;
+}
+
+/* ---------------- Filter bar ---------------- */
+
+.filter-bar {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.filter-bar input[type='text'],
+.filter-bar select {
+  font-family: var(--font-body);
+  font-size: 13px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 7px;
+  padding: 8px 10px;
+  color: var(--ink);
+}
+
+.filter-bar .search-input {
+  flex: 1;
+  min-width: 140px;
+}
+
+.chip-toggle {
+  display: flex;
+  gap: 6px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 3px;
+}
+
+.chip-toggle button {
+  border: none;
+  background: transparent;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  cursor: pointer;
+  color: var(--muted);
+}
+
+.chip-toggle button.active {
+  background: var(--ink);
+  color: #fff;
+}
+
+/* ---------------- Todo form ---------------- */
+
+.todo-form {
+  margin-top: 18px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px;
+}
+
+.todo-form .row1 {
+  display: flex;
+  gap: 8px;
+}
+
+.todo-form input[type='text'] {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  font-size: 14px;
+  font-family: var(--font-body);
+}
+
+.todo-form .add-btn {
+  padding: 10px 16px;
+  background: var(--ink);
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.todo-form .add-btn:hover {
+  background: var(--ink-soft);
+}
+
+.todo-form .row2 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.todo-form .row2 select,
+.todo-form .row2 input {
+  font-size: 12px;
+  padding: 7px 9px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  color: var(--muted);
+}
+
+.todo-form .toggle-advanced {
+  border: none;
+  background: none;
+  color: var(--muted);
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 8px 2px 0;
+}
+
+/* ---------------- Ticket list ---------------- */
+
+.todo-list {
+  list-style: none;
+  padding: 0;
+  margin: 18px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ticket {
+  position: relative;
+  display: flex;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(22, 35, 58, 0.04);
+}
+
+.ticket.completed {
+  opacity: 0.6;
+}
+
+.ticket .priority-tab {
+  width: 6px;
+  flex-shrink: 0;
+}
+
+.ticket .priority-tab.HIGH {
+  background: var(--coral);
+}
+.ticket .priority-tab.MEDIUM {
+  background: var(--amber);
+}
+.ticket .priority-tab.LOW {
+  background: var(--teal);
+}
+
+.ticket .check-zone {
+  display: flex;
+  align-items: flex-start;
+  padding: 14px 4px 14px 14px;
+}
+
+.ticket .check-zone input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--ink);
+  cursor: pointer;
+}
+
+.ticket .perforation {
+  position: relative;
+  width: 0;
+  border-left: 1.5px dashed var(--line);
+  margin: 8px 12px;
+}
+
+.ticket .perforation::before,
+.ticket .perforation::after {
+  content: '';
+  position: absolute;
+  left: -7px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 1px solid var(--line);
+}
+
+.ticket .perforation::before {
+  top: -15px;
+}
+.ticket .perforation::after {
+  bottom: -15px;
+}
+
+.ticket .content {
+  flex: 1;
+  padding: 14px 14px 14px 0;
+  min-width: 0;
+}
+
+.ticket .title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.ticket .title {
+  font-size: 14.5px;
+  font-weight: 500;
+  word-break: break-word;
+}
+
+.ticket.completed .title {
+  text-decoration: line-through;
+  color: var(--muted);
+}
+
+.ticket .title-edit {
+  width: 100%;
+  font-size: 14.5px;
+  font-family: var(--font-body);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 4px 6px;
+}
+
+.ticket .actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.ticket .icon-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--muted);
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+}
+
+.ticket .icon-btn:hover {
+  background: var(--navy-soft);
+  color: var(--ink);
+}
+
+.ticket .icon-btn.delete:hover {
+  background: var(--coral-soft);
+  color: var(--coral);
+}
+
+.ticket .meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.pill {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  padding: 3px 7px;
+  border-radius: 4px;
+  letter-spacing: 0.03em;
+}
+
+.pill.due {
+  background: var(--navy-soft);
+  color: var(--ink-soft);
+}
+
+.pill.due.overdue {
+  background: var(--coral-soft);
+  color: var(--coral);
+}
+
+.pill.tag {
+  background: var(--teal-soft);
+  color: var(--teal);
+}
+
+.pill.priority-label {
+  text-transform: uppercase;
+  font-size: 9.5px;
+}
+
+.pill.priority-label.HIGH {
+  background: var(--coral-soft);
+  color: var(--coral);
+}
+.pill.priority-label.MEDIUM {
+  background: #fbf0da;
+  color: var(--amber-deep);
+}
+.pill.priority-label.LOW {
+  background: var(--teal-soft);
+  color: var(--teal);
+}
+
+.notes-text {
+  margin-top: 6px;
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.empty-state .empty-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.error-banner {
+  margin-top: 14px;
+  background: var(--coral-soft);
+  color: var(--coral);
+  border-radius: 7px;
+  padding: 10px 12px;
+  font-size: 13px;
+}
+
+.loading-row {
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 13px;
+  font-family: var(--font-mono);
+}
+
+/* ---------------- Auth ---------------- */
+
+.auth-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  box-shadow: 0 12px 30px -18px rgba(22, 35, 58, 0.4);
+}
+
+.auth-card .eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--amber-deep);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.auth-card h1 {
+  font-family: var(--font-display);
+  font-size: 24px;
+  margin: 4px 0 20px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.auth-form input {
+  padding: 11px 12px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  font-size: 14px;
+  font-family: var(--font-body);
+}
+
+.auth-form button[type='submit'] {
+  padding: 11px 16px;
+  background: var(--ink);
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.auth-form button[type='submit']:hover {
+  background: var(--ink-soft);
+}
+
+.auth-form button[type='submit']:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.switch-auth {
+  text-align: center;
+  font-size: 13px;
+  margin-top: 18px;
+  color: var(--muted);
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 13px;
+  text-decoration: underline;
+  padding: 0;
+  font-weight: 600;
+}
+
+.field-error {
+  color: var(--coral);
+  font-size: 12px;
+}
+
+@media (max-width: 480px) {
+  .board-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
