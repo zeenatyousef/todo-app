@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { todosApi, ApiError } from '../api';
 
-export function useTodos({ onAuthError } = {}) {
+export function useTodos({ onAuthError , token } = {}) {
   const [todos, setTodos] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -28,6 +28,7 @@ export function useTodos({ onAuthError } = {}) {
   );
 
   const refresh = useCallback(async () => {
+    if (!token) return;
     try {
       setLoading(true);
       const [todoList, todoStats] = await Promise.all([
@@ -42,7 +43,12 @@ export function useTodos({ onAuthError } = {}) {
     } finally {
       setLoading(false);
     }
-  }, [filters, handleError]);
+  }, [filters, handleError, token]);
+
+  useEffect(() => {
+  setTodos([]);
+  setStats(null);
+}, [token]);
 
   useEffect(() => {
     refresh();

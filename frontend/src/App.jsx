@@ -28,7 +28,7 @@ function App() {
   };
 
   const { todos, stats, loading, error, filters, setFilters, addTodo, updateTodo, removeTodo } =
-    useTodos({ onAuthError: logout });
+    useTodos({ onAuthError: logout, token });
 
   if (!token) {
     return <Auth onAuthSuccess={handleAuthSuccess} />;
